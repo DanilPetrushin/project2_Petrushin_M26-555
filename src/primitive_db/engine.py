@@ -14,22 +14,33 @@ def print_help():
    
     print("\n***Процесс работы с таблицей***")
     print("Функции:")
+    # операции с таблицами из 2-го блока
     print("<command> create_table <имя_таблицы> "
     "<столбец1:тип> ... - создать таблицу")
     print("<command> list_tables - показать список всех таблиц")
     print("<command> drop_table <имя_таблицы> - удалить таблицу")
-    
+    # операции с таблицами из 3-го блока
+    print("<command> insert into <имя_таблицы> values (<значение1>, "
+    "<значение2>, ...) - создать запись.")
+    print("<command> select from <имя_таблицы> where <столбец> = "
+    "<значение> - прочитать записи по условию.")
+    print("<command> select from <имя_таблицы> - прочитать все записи.")
+    print("<command> update <имя_таблицы> set <столбец1> = <новое_значение1> " \
+    "where <столбец_условия> = <значение_условия> - обновить запись.")
+    print("<command> delete from <имя_таблицы> where <столбец> = <значение> - " \
+    "удалить запись.")
+    # общие команды
     print("\nОбщие команды:")
     print("<command> exit - выход из программы")
     print("<command> help - справочная информация\n")
 
 def run():
-    filepath = "db_meta.json"
+    meta_filepath = "db_meta.json"
     print_help()
 
     while True:
         # подгружаем актуальные данные
-        metadata = load_metadata(filepath)
+        metadata = load_metadata(meta_filepath)
         user_input = prompt.string("Введите команду: ")
         args = shlex.split(user_input) # разделяем ввод на отдельные слова
         command = args[0] 
@@ -57,4 +68,4 @@ def run():
             print(f"Функции <{command}> нет. Попробуйте снова.")
 
         # в конце цикла сохраняем данные
-        save_metadata(filepath, metadata)
+        save_metadata(meta_filepath, metadata)

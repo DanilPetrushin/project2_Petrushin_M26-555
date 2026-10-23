@@ -1,4 +1,6 @@
 #Здесь будет основная логика работы с таблицами и данными.
+from primitive_db.utils import load_table_data
+
 
 def create_table(metadata, table_name, columns):
     '''
@@ -67,3 +69,48 @@ def list_tables(metadata):
     for table_name, columns in metadata.items():
         #columns хранят несколько значений, тк это список, поэтому склеиваем их
         print(f"{table_name}: {', '.join(columns)}") 
+
+# валидация вынесена в отдельную функцию из-за сложности
+def validate_data(metadata, table_name, real_data):
+    # есть ли метаданные по такой таблице?
+    if table_name not in metadata:
+        raise ValueError(f"Таблица '{table_name}' не обнаружена")
+    # создаём словарь типа name : str...
+    template = dict(column.split(":") for column in metadata)
+    types = {"int":int, "str":str, "bool":bool}
+    for name, value in real_data.items:
+        if name not in template:
+            raise ValueError(f"Столбец '{name}' не обнаружен")
+        required_type = types[template[name]]
+        if type(value) is not required_type:
+            raise ValueError(f"Значения столбца '{name}' должны принадлежать"
+                             f"типу {template[name]}")
+
+        
+def insert(metadata, table_name, values):
+    if table_name not in metadata:
+        raise ValueError(f'Таблица {table_name} не обнаружена')
+    
+    columns = metadata[table_name][1:]
+    
+    if len(values) != len(columns):
+        raise ValueError(
+            f"Ожидается значений: {len(columns)}, "
+            f"получено: {len(values)}."
+        )
+    # создаём словарь, в котором сначала указываем название колонки, а потом значение
+    real_data = {column.split(":")[0]:value for column, value in zip(columns, values)}
+    validate_data(metadata, table_name, real_data)
+
+    table_data = load_table_data(table_name)
+    #создание нового id, default на случай, если это первая запись
+    next_id = max((record["ID"] for record in table_data), default=0) + 1
+    table_data.append({"ID": next_id, **real_data})
+    return table_data
+
+def select(table_data, where_clause=None):
+    pass
+def update(table_data, set_clause, where_clause):
+    pass
+def delete(table_data, where_clause):
+    pass
