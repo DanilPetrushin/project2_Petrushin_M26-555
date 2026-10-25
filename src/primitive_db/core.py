@@ -135,10 +135,13 @@ def update(table_name, set_clause, where_clause=None):
                 record.update(set_clause)
     return table_data
 
-def delete(table_data, where_clause):
+def delete(table_name, where_clause):
+    table_data = load_table_data(table_name)
     name, value = next(iter(where_clause.items()))
     data = []
+
     for record in table_data:
         if record.get(name) != value:
             data.append(record)
+
     return data

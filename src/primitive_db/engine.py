@@ -20,6 +20,7 @@ from primitive_db.utils import (
     print_table,
     save_metadata,
     save_table_data,
+    load_table_data,
 )
 
 
@@ -139,7 +140,6 @@ def run():
                 table_name = args[2]
                 where_clause = parser_clause(" ".join(args[4:]))
                 validate_data(metadata, table_name, where_clause)
-
                 table_data = delete(table_name, where_clause)
                 save_table_data(table_name, table_data)
                 print("Удаление выполнено.")
