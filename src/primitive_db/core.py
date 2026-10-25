@@ -1,5 +1,5 @@
 #Здесь будет основная логика работы с таблицами и данными.
-from primitive_db.utils import load_table_data
+from primitive_db.utils import load_table_data, save_table_data
 
 
 def create_table(metadata, table_name, columns):
@@ -43,7 +43,7 @@ def create_table(metadata, table_name, columns):
         names.add(name)
         # result хранит все корректные столбцы
         result.append(column)
-
+    save_table_data(table_name, [])
     metadata[table_name] = result
     print(f"Таблица '{table_name}' создана.")
     return metadata
@@ -76,14 +76,14 @@ def validate_data(metadata, table_name, real_data):
     if table_name not in metadata:
         raise ValueError(f"Таблица '{table_name}' не обнаружена")
     # создаём словарь типа name : str...
-    template = dict(column.split(":") for column in metadata)
+    template = dict(column.split(":") for column in metadata[table_name])
     types = {"int":int, "str":str, "bool":bool}
-    for name, value in real_data.items:
+    for name, value in real_data.items():
         if name not in template:
             raise ValueError(f"Столбец '{name}' не обнаружен")
         required_type = types[template[name]]
         if type(value) is not required_type:
-            raise ValueError(f"Значения столбца '{name}' должны принадлежать"
+            raise ValueError(f"Значения столбца '{name}' должны принадлежать "
                              f"типу {template[name]}")
 
         
@@ -112,7 +112,7 @@ def select(table_name, where_clause=None):
     # подгрузка данных
     table_data = load_table_data(table_name)
     # если нет условия
-    if where_clause == None:
+    if where_clause is None:
         return table_data
     # распаковка условия
     name, value = next(iter(where_clause.items()))
@@ -123,8 +123,8 @@ def select(table_name, where_clause=None):
             data.append(record)
     return data
 
-def update(table_name, set_clause, where_clause == None):
-    if where_clause == None:
+def update(table_name, set_clause, where_clause=None):
+    if where_clause is None:
         raise ValueError("Условие не задано")
     if "ID" in set_clause:
         raise ValueError("Изменять ID нельзя")

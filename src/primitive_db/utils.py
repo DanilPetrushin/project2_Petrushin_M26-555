@@ -2,6 +2,7 @@
 
 import json
 import os
+
 from prettytable import PrettyTable
 
 
