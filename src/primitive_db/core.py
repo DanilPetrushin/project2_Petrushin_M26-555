@@ -108,9 +108,37 @@ def insert(metadata, table_name, values):
     table_data.append({"ID": next_id, **real_data})
     return table_data
 
-def select(table_data, where_clause=None):
-    pass
-def update(table_data, set_clause, where_clause):
-    pass
+def select(table_name, where_clause=None):
+    # подгрузка данных
+    table_data = load_table_data(table_name)
+    # если нет условия
+    if where_clause == None:
+        return table_data
+    # распаковка условия
+    name, value = next(iter(where_clause.items()))
+    data = [ ]
+    # если соответствует условию -> добавь в data
+    for record in table_data:
+        if record.get(name) == value:
+            data.append(record)
+    return data
+
+def update(table_name, set_clause, where_clause == None):
+    if where_clause == None:
+        raise ValueError("Условие не задано")
+    if "ID" in set_clause:
+        raise ValueError("Изменять ID нельзя")
+    table_data = load_table_data(table_name)
+    name, value = next(iter(where_clause.items()))
+    for record in table_data:
+            if record.get(name) == value:
+                record.update(set_clause)
+    return table_data
+
 def delete(table_data, where_clause):
-    pass
+    name, value = next(iter(where_clause.items()))
+    data = []
+    for record in table_data:
+        if record.get(name) != value:
+            data.append(record)
+    return data

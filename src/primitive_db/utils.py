@@ -2,6 +2,7 @@
 
 import json
 import os
+from prettytable import PrettyTable
 
 
 def load_metadata(filepath):
@@ -39,3 +40,15 @@ def save_table_data(table_name, data):
 
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
+
+# для создания красивых таблиц
+def print_table(metadata, table_name, records):
+    columns = [
+        column.split(":")[0]
+        for column in metadata[table_name]
+    ]
+    table = PrettyTable()
+    table.field_names = columns
+    for record in records:
+        table.add_row([record[column] for column in columns])
+    print(table)
