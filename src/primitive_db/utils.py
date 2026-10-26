@@ -7,22 +7,25 @@ from prettytable import PrettyTable
 
 
 def load_metadata(filepath):
-    '''
-    Загружает данные из JSON-файла. 
-    Если файл не найден, возвращает пустой словарь {}
-    '''
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            return json.load (f)
+        with open(filepath, "r", encoding="utf-8") as file:
+            text = file.read()
     except FileNotFoundError:
+        text = ""
+
+    if not text.strip():
+        save_metadata(filepath, {})
         return {}
 
+    return json.loads(text)
+
 def save_metadata(filepath, data):
-    '''
+    """
     Сохраняет переданные данные в JSON-файл.
-    '''
-    with open(filepath, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)  # ensure_ascii для кириллицы 
+    """
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)  # ensure_ascii для кириллицы
+
 
 def load_table_data(table_name):
     filepath = os.path.join("data", f"{table_name}.json")
@@ -30,7 +33,8 @@ def load_table_data(table_name):
         with open(filepath, "r", encoding="utf-8") as f:
             return json.load(f)
     except FileNotFoundError:
-        return [] # возвращает пустой список, чтобы не прерывать работу ошибкой
+        return []  # возвращает пустой список, чтобы не прерывать работу ошибкой
+
 
 def save_table_data(table_name, data):
     try:
@@ -42,12 +46,10 @@ def save_table_data(table_name, data):
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
+
 # для создания красивых таблиц
 def print_table(metadata, table_name, records):
-    columns = [
-        column.split(":")[0]
-        for column in metadata[table_name]
-    ]
+    columns = [column.split(":")[0] for column in metadata[table_name]]
     table = PrettyTable()
     table.field_names = columns
     for record in records:
