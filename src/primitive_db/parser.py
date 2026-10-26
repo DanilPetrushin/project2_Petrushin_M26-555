@@ -13,6 +13,9 @@ values, where, set
 
 # Работает только для одного значения типа 42, "Петрушин Данил"
 def parser_value(value):
+    '''
+    Парсинг данных
+    '''
     value = value.strip()  # выкидываем начальные и конечные пробелы
     # Обработка строк
     # (!!!) Запрашиваем строки именно в КАВЫЧКАХ
@@ -36,6 +39,9 @@ def parser_value(value):
 
 
 def parser_clause(text):
+    '''
+        Парсинг условий set и where
+    '''
     args = shlex.split(text, posix=False)
     if len(args) != 3 or args[1] != "=":
         raise ValueError("Вокруг = нужны пробелы")

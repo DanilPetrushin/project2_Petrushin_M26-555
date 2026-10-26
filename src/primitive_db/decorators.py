@@ -5,6 +5,9 @@ from primitive_db.constants import CANCEL_OPERATION
 
 
 def handle_db_errors(func):
+    '''
+    Декоратор для перехвата ошибок
+    '''
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:
@@ -26,6 +29,9 @@ def handle_db_errors(func):
 
 
 def confirm_action(func_name):
+    '''
+    Декоратор для подтверждения действий
+    '''
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -42,6 +48,9 @@ def confirm_action(func_name):
 
 
 def log_time(func):
+    '''
+    Декоратор для счёта времени потраченного на операцию
+    '''
     @wraps(func)
     def wrapper(*args, **kwargs):
         start_time = time.monotonic()
@@ -57,6 +66,9 @@ def log_time(func):
 # очень хотелось реализовать cache из functools, но по заданию
 # требуется другое решение
 def create_cacher():
+    '''
+    Кэш.
+    '''
     cache = {}
 
     def cache_result(key, value_func):

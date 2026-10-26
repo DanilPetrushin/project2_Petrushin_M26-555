@@ -22,12 +22,10 @@ def create_table(metadata, table_name, columns):
     Проверять корректность типов данных (только int, str, bool).
     В случае успеха, обновлять словарь metadata и возвращать его.
     """
-    # есть ли таблица с таким именем?
+
     if table_name in metadata:
         raise ValueError(f"Таблица '{table_name}' уже существует.")
 
-    # в result формируем таблицу для её дальнешего переноса в metadata
-    # сразу заносим ID:int
     result = ["ID:int"]
     names = {"ID"}
 
@@ -37,19 +35,15 @@ def create_table(metadata, table_name, columns):
         if len(split_data) != 2:  # проверка на наличие двух слов (имя и тип)
             raise ValueError(f"Столбец '{column}' должен иметь формат имя:тип.")
 
-        name, data_type = split_data  # имя и тип переход в две разные переменные
+        name, data_type = split_data 
 
-        # 1) ЕСТЬ ЛИ ИМЯ
-        # 2) соотвествует ли доступному
         if not name or data_type not in ("int", "str", "bool"):
             raise ValueError(f"Некорректные данные в столбце '{column}'.")
-        # не повторяется ли имя столбца?
+
         if name in names:
             raise ValueError(f"Столбец '{name}' уже существует.")
 
-        # names нужен для проверки дубликации имён
         names.add(name)
-        # result хранит все корректные столбцы
         result.append(column)
 
     save_table_data(table_name, [])
@@ -61,6 +55,9 @@ def create_table(metadata, table_name, columns):
 @handle_db_errors
 @confirm_action("удаление таблицы")
 def drop_table(metadata, table_name):
+    '''
+    Удаление таблицы
+    '''
     if table_name not in metadata:
         raise ValueError(f"Таблица '{table_name}' не найдена.")
 
@@ -70,6 +67,9 @@ def drop_table(metadata, table_name):
 
 
 def list_tables(metadata):
+    '''
+    Вывод таблицы метаданных
+    '''    
     # проверка на пустые таблицы: чтобы не выглядело, будто очень долгая загрузка
     if not metadata:
         print("Таблицы отсутствуют")
@@ -83,6 +83,9 @@ def list_tables(metadata):
 
 # валидация вынесена в отдельную функцию из-за сложности
 def validate_data(metadata, table_name, real_data):
+    '''
+    Валидация типа данных
+    '''
     # есть ли метаданные по такой таблице?
     if table_name not in metadata:
         raise ValueError(f"Таблица '{table_name}' не обнаружена")
@@ -102,6 +105,9 @@ def validate_data(metadata, table_name, real_data):
 @handle_db_errors
 @log_time
 def insert(metadata, table_name, values):
+    '''
+    Добавление строк в таблицу
+    '''
     if table_name not in metadata:
         raise ValueError(f"Таблица {table_name} не обнаружена")
 
@@ -125,6 +131,9 @@ def insert(metadata, table_name, values):
 @handle_db_errors
 @log_time
 def select(table_name, where_clause=None):
+    '''
+    Вывод всей таблицы или отдельных строк по условию
+    '''
     # подгрузка данных
     table_data = load_table_data(table_name)
 
@@ -159,6 +168,9 @@ def select(table_name, where_clause=None):
 
 @handle_db_errors
 def update(table_name, set_clause, where_clause=None):
+    '''
+    Обновлениие строки с данными
+    '''
     if where_clause is None:
         raise ValueError("Условие не задано")
     if "ID" in set_clause:
@@ -176,6 +188,9 @@ def update(table_name, set_clause, where_clause=None):
 @handle_db_errors
 @confirm_action("удаление записей")
 def delete(table_name, where_clause):
+    '''
+    Удаление данных по условию
+    '''
     table_data = load_table_data(table_name)
     if where_clause is None or len(where_clause) != 1:
         raise ValueError("Укажите ровно одно условие.")

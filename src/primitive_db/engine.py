@@ -1,6 +1,6 @@
 # Файл отвечает за запуск, игровой цикл и парсинг команд.
-import json
 import shlex
+
 import prompt
 
 from primitive_db.constants import CANCEL_OPERATION
@@ -35,8 +35,8 @@ def print_help():
     print("<command> drop_table <имя_таблицы> - удалить таблицу")
     # операции с таблицами из 3-го блока
     print(
-        "<command> insert into <имя_таблицы> values (<значение1>, "
-        "<значение2>, ...) - создать запись."
+        "<command> insert into <имя_таблицы> values (<значение1> "
+        "<значение2> ...) - создать запись."
     )
     print(
         "<command> select from <имя_таблицы> where <столбец> = "

@@ -7,6 +7,10 @@ from prettytable import PrettyTable
 
 
 def load_metadata(filepath):
+    '''
+    Подрузка метаданных из JSON-файла и создание JSON-файла
+    с "{}"на случай отсутвия такого файла
+    '''
     try:
         with open(filepath, "r", encoding="utf-8") as file:
             text = file.read()
@@ -28,6 +32,9 @@ def save_metadata(filepath, data):
 
 
 def load_table_data(table_name):
+    """
+    Загружает переданные табличные данные.
+    """
     filepath = os.path.join("data", f"{table_name}.json")
     try:
         with open(filepath, "r", encoding="utf-8") as f:
@@ -37,6 +44,9 @@ def load_table_data(table_name):
 
 
 def save_table_data(table_name, data):
+    """
+    Сохраняет переданные табличные данные.
+    """
     try:
         os.mkdir("data")
     except FileExistsError:
@@ -49,6 +59,9 @@ def save_table_data(table_name, data):
 
 # для создания красивых таблиц
 def print_table(metadata, table_name, records):
+    '''
+    Функция для создания красивых таблиц
+    '''
     columns = [column.split(":")[0] for column in metadata[table_name]]
     table = PrettyTable()
     table.field_names = columns
