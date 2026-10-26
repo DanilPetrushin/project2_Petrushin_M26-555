@@ -7,16 +7,17 @@ from prettytable import PrettyTable
 
 
 def load_metadata(filepath):
-    """
-    Загружает данные из JSON-файла.
-    Если файл не найден, возвращает пустой словарь {}
-    """
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
-            return json.load(f)
+        with open(filepath, "r", encoding="utf-8") as file:
+            text = file.read()
     except FileNotFoundError:
+        text = ""
+
+    if not text.strip():
+        save_metadata(filepath, {})
         return {}
 
+    return json.loads(text)
 
 def save_metadata(filepath, data):
     """
